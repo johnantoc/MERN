@@ -8,8 +8,9 @@
     "npm": "6.14.6"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "npm run prod",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "prod": "node index.js && npm run build --prefix client",
     "server": "nodemon index.js",
     "client": "npm run start --prefix client"
   },

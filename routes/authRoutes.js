@@ -9,7 +9,7 @@ module.exports = (app) => {
   );
 
   app.get("/auth/google/callback", (req, res) => {
-    res.redirect("/surveys");
+    res.redirect("/");
   });
 
   app.get("/api/logout", (req, res) => {

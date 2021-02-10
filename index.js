@@ -1,8 +1,9 @@
 const express = require("express");
-const path = require("path");
 const mongoose = require("mongoose");
 const cookieSession = require("cookie-session");
 const passport = require("passport");
+const bodyParser = require("body-parser");
+
 const keys = require("./config/keys");
 require("./models/User");
 require("./services/passport");
@@ -14,6 +15,7 @@ mongoose.connect(keys.mongoUri, {
 
 const app = express();
 
+app.use(bodyParser.json());
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -25,13 +27,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 require("./routes/authRoutes")(app);
+require("./routes/billingRoutes")(app);
 
-// React static files.
-app.use(express.static(path.join(__dirname, "/client/build")));
+if (process.env.NODE_ENV === "production") {
+  // Experss serve up production client build assets, main.js etc.
+  app.use(express.static("client/build"));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client/build/index.html"));
-});
+  // Express will serve the index.html if route is not recognised.
+  const path = require("path");
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);

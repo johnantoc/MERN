@@ -8,4 +8,4 @@ const userSchema = new Schema({
   emails: [{ value: String, verified: Boolean }],
 });
 
-mongoose.model("users", userSchema);
+mongoose.model("User", userSchema);
